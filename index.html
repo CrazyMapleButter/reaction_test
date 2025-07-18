@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reaction Time Test</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+      background-color: #222;
+      color: white;
+    }
+    #box {
+      width: 300px;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: red;
+      cursor: pointer;
+      font-size: 20px;
+      border-radius: 12px;
+      transition: background-color 0.2s;
+    }
+  </style>
+</head>
+<body>
+
+<div id="box">Wait for green...</div>
+
+<script>
+let startTime, timeout, clicked = false;
+const box = document.getElementById('box');
+
+function startGame() {
+  box.textContent = 'Wait for green...';
+  box.style.backgroundColor = 'red';
+  clicked = false;
+
+  const delay = Math.random() * 3000 + 2000; // 2–5 seconds
+  timeout = setTimeout(() => {
+    box.style.backgroundColor = 'green';
+    box.textContent = 'CLICK!';
+    startTime = Date.now();
+  }, delay);
+}
+
+box.addEventListener('click', () => {
+  if (clicked) return;
+  clicked = true;
+
+  if (box.style.backgroundColor === 'green') {
+    const reactionTime = Date.now() - startTime;
+    box.textContent = `Your time: ${reactionTime}ms`;
+    box.style.backgroundColor = 'blue';
+
+    // Send to server (optional):
+    // fetch(`/submit?user_id=123456&time=${reactionTime}`);
+
+  } else {
+    clearTimeout(timeout);
+    box.textContent = 'Too soon! You lose.';
+    box.style.backgroundColor = 'gray';
+  }
+});
+
+startGame();
+</script>
+
+</body>
+</html>
